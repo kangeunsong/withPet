@@ -4,13 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
 class PageHome extends StatefulWidget {
-  const PageHome({Key? key}) : super(key: key);
+  final String temp; // 새로 추가된 필드
+  const PageHome({Key? key, required this.temp}) : super(key: key);
 
   @override
   State<PageHome> createState() => _PageHomeState();
 }
 
 class _PageHomeState extends State<PageHome> {
+
   DateTime selectedDay = DateTime(
     DateTime.now().year,
     DateTime.now().month,
@@ -18,6 +20,9 @@ class _PageHomeState extends State<PageHome> {
   );
   DateTime focusedDay = DateTime.now();
   List<Event> currentEvents = [];
+
+
+  late final DateTime firstDay = DateTime(2023, 1, 1);
 
   Map<DateTime, List<Event>> events = {
     DateTime.utc(2024, 5, 15): [
@@ -38,6 +43,9 @@ class _PageHomeState extends State<PageHome> {
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    int difference = DateTime(now.year, now.month, now.day).difference(firstDay).inDays + 1;
+
     return SingleChildScrollView(
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -55,7 +63,7 @@ class _PageHomeState extends State<PageHome> {
                     color: Colors.grey,
                     borderRadius: BorderRadius.all(Radius.circular(20))),
                 child: Center(
-                  child: Text("뽀삐와 함께한지 D+123일"),
+                  child: Text("뽀삐와 함께한지 D+${difference}일"),
                 ),
               ),
               Container(
@@ -106,12 +114,6 @@ class _PageHomeState extends State<PageHome> {
                     ),
                   )),
               SizedBox(height: 32.0),
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("이전 페이지로"),
-              ),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 150,
@@ -143,7 +145,7 @@ class Calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
-        firstDay: DateTime.utc(2010, 10, 16),
+        firstDay: DateTime.utc(2010, 10, 16), // 바꾸니까 현재 날짜 포커스 풀림 (?
         lastDay: DateTime.utc(2030, 3, 14),
         focusedDay: DateTime.now(),
         headerStyle: HeaderStyle(

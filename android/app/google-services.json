@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "673979357549",
+    "project_id": "opensw-project-419502",
+    "storage_bucket": "opensw-project-419502.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673979357549:android:de29b2c36f0142ccc06264",
+        "android_client_info": {
+          "package_name": "com.example.with_pet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpqW0ZijCSOjtiGcavxfIsG430nweoQWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

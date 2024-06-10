@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
+import 'package:with_pet/screen/service/databaseSvc.dart';
 import '../const/tabs.dart';
 import 'homePage/google_map_page.dart';
 import 'homePage/calendar_page.dart';
 import 'homePage/pagehome.dart';
 import 'homePage/rank.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'homePage/pagehome.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -15,13 +18,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   late PageController _pageController;
   int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    _getUserUID();
     _pageController = PageController(initialPage: _selectedIndex);
+  }
+
+  final _authetication = FirebaseAuth.instance;
+  String userkey = 'null';
+  void _getUserUID() {
+    final User? user = _authetication.currentUser;
+    setState(() {
+      if (user != null) {
+        userkey = user.uid;
+      } else {
+        userkey = 'No user signed in';
+      }
+    });
   }
 
   void _onItemTapped(int index) {
@@ -114,6 +132,47 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {},
               trailing: Icon(Icons.navigate_next),
             ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              iconColor: Colors.lightBlueAccent,
+              focusColor: Colors.lightBlueAccent,
+              title: Text('로그아웃'),
+              onTap: () {
+                _authetication.signOut();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // 임시, 나중에 로그인 화면으로 가는 코드로 수정
+              },
+              trailing: Icon(Icons.navigate_next),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              iconColor: Colors.lightBlueAccent,
+              focusColor: Colors.lightBlueAccent,
+              title: Text('회원탈퇴'),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text("회원 탈퇴 하시겠습니까?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            // DatabaseSvc databaseSvc = DatabaseSvc();
+                            DatabaseSvc().deleteDB(userkey, _authetication);
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop(); // 임시, 나중에 로그인 화면으로 가는 코드로 수정
+                          },
+                          child: Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              trailing: Icon(Icons.navigate_next),
+            ),
           ],
         ),
       ),
@@ -126,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         children: [
           // 각 탭에 해당하는 페이지 위젯을 여기에 추가합니다.
-          PageHome(),
+          PageHome(temp: userkey),
 
           GoogleMapPage(),
 

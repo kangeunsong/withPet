@@ -9,11 +9,21 @@ import 'package:with_pet/screen/Join_screen.dart';
 import 'package:with_pet/screen/home_screen.dart';
 import 'package:with_pet/screen/sign_in_screen.dart';
 import 'package:with_pet/screen/start_screen.dart';
-
-// 'pages' 디렉토리 안의 'google_map_page.dart' 파일을 가져옵니다. 이 파일에는 Google Maps를 보여주는 페이지가 정의되어 있을 것입니다.
 import 'screen/homePage/google_map_page.dart';
+import 'screen/service/databaseSvc.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  DatabaseSvc databaseSvc = DatabaseSvc();
+
   runApp(
     MultiProvider(
       providers: [
@@ -49,7 +59,12 @@ class GoogleMap extends StatelessWidget {
         title: 'Google Maps App',
 
         // 애플리케이션의 전반적인 테마를 설정합니다. 여기서는 기본 색상으로 파란색을 사용하는 테마를 정의합니다.
-        theme: ThemeData(primarySwatch: Colors.blue),
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue,
+          ),
+          primarySwatch: Colors.yellow,
+        ),
 
         // 애플리케이션이 시작될 때 표시될 기본 화면을 설정합니다. 여기서는 'GoogleMapPage'를 기본 화면으로 설정합니다.
         home: const GoogleMapPage(),
